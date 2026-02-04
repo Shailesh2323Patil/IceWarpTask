@@ -1,0 +1,12 @@
+CREATE TABLE GroupEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+insertGroup:
+INSERT OR REPLACE INTO GroupEntity(
+    name
+) VALUES (?);
+
+getAllGroups:
+SELECT * FROM GroupEntity;

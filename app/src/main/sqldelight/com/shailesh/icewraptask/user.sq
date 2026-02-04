@@ -1,0 +1,16 @@
+CREATE TABLE UserEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    token TEXT NOT NULL,
+    host TEXT NOT NULL,
+    email TEXT NOT NULL
+);
+
+insertUser:
+INSERT INTO UserEntity(token, host, email)
+VALUES(?,?,?);
+
+getUsers:
+SELECT * FROM UserEntity;
+
+deleteUser:
+DELETE FROM UserEntity WHERE id = ?;

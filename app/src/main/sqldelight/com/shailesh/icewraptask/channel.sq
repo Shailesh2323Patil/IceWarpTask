@@ -1,0 +1,34 @@
+CREATE TABLE ChannelEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT,
+    created INTEGER,
+    creator TEXT,
+    isMember INTEGER NOT NULL,
+    groupEmail TEXT,
+    groupFolderName TEXT,
+    isActive INTEGER NOT NULL,
+    isRecent INTEGER NOT NULL,
+    isAutoFollowed INTEGER NOT NULL,
+    isNotifications INTEGER NOT NULL,
+    lastSeen TEXT,
+    latest INTEGER,
+    unreadCount INTEGER,
+    threadUnreadCount INTEGER,
+    members TEXT NOT NULL
+);
+
+insertChannel:
+INSERT OR REPLACE INTO ChannelEntity(
+    id, name, created, creator, isMember, groupEmail, groupFolderName,
+    isActive, isRecent, isAutoFollowed, isNotifications,
+    lastSeen, latest, unreadCount, threadUnreadCount, members
+)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+
+getChannels:
+SELECT * FROM ChannelEntity;
+
+getChannelByGroupName:
+SELECT *
+FROM ChannelEntity
+WHERE groupFolderName = ?;
