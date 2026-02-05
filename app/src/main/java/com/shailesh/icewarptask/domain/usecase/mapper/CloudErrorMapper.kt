@@ -31,52 +31,51 @@ class CloudErrorMapper @Inject constructor(private val gson: Gson) {
                     // handle UNAUTHORIZED situation (when token expired)
                     if (throwable.code() == AppConstants.ERROR_CODE_401) {
                         ErrorModel(
-                            unauthorized,
-                            AppConstants.ERROR_CODE_401,
-                            ErrorStatus.UNAUTHORIZED,
-                            userDoesNoteExist
+                            message = unauthorized,
+                            code = AppConstants.ERROR_CODE_401,
+                            errorStatus = ErrorStatus.UNAUTHORIZED,
+                            errorInformation = userDoesNoteExist
                         )
                     } else {
                         getHttpError(throwable.response()!!.errorBody())
                     }
                 }
 
-
                 // handle api call timeout error is
                 is SocketTimeoutException -> {
                     ErrorModel(
-                        timeOut,
-                        0,
-                        ErrorStatus.TIMEOUT,
-                        somethingWentWrong
+                        message = timeOut,
+                        code = 0,
+                        errorStatus = ErrorStatus.TIMEOUT,
+                        errorInformation = somethingWentWrong
                     )
                 }
 
                 // handle connection error is
                 is IOException -> {
                     ErrorModel(
-                        checkConnection,
-                        0,
-                        ErrorStatus.NO_CONNECTION,
-                        checkConnection
+                        message = checkConnection,
+                        code = 0,
+                        errorStatus = ErrorStatus.NO_CONNECTION,
+                        errorInformation = checkConnection
                     )
                 }
 
                 is UnknownHostException -> {
                     ErrorModel(
-                        checkConnection,
-                        0,
-                        ErrorStatus.NO_CONNECTION,
-                        checkConnection
+                        message = checkConnection,
+                        code = 0,
+                        errorStatus = ErrorStatus.NO_CONNECTION,
+                        errorInformation = checkConnection
                     )
                 }
 
                 else -> {
                     ErrorModel(
-                        throwable.message,
-                        0,
-                        ErrorStatus.EMPTY_RESPONSE,
-                        somethingWentWrong
+                        message = throwable.message,
+                        code = 0,
+                        errorStatus = ErrorStatus.EMPTY_RESPONSE,
+                        errorInformation = somethingWentWrong
                     )
                 }
             }
@@ -89,28 +88,19 @@ class CloudErrorMapper @Inject constructor(private val gson: Gson) {
             val result = body?.string()
             val json = Gson().fromJson(result, JsonObject::class.java)
             val errorObject: Any = json.get("error")
-            if (errorObject is String) {
-                ErrorModel(
-                    json.get("message").asString,
-                    json.get("status_code").asInt,
-                    ErrorStatus.BAD_RESPONSE,
-                    json.get("error").asString
-                )
-            } else {
-                ErrorModel(
-                    json.get("message").asString,
-                    json.get("status_code").asInt,
-                    ErrorStatus.BAD_RESPONSE,
-                    errorObject
-                )
-            }
+            ErrorModel(
+                message = json.get("message").asString,
+                code = json.get("status_code").asInt,
+                errorStatus = ErrorStatus.BAD_RESPONSE,
+                errorInformation = errorObject
+            )
         } catch (e: Throwable) {
             e.printStackTrace()
             ErrorModel(
-                e.message,
-                AppConstants.ERROR_CODE_404,
-                ErrorStatus.NOT_DEFINED,
-                somethingWentWrong
+                message = e.message,
+                code = AppConstants.ERROR_CODE_404,
+                errorStatus = ErrorStatus.NOT_DEFINED,
+                errorInformation = somethingWentWrong
             )
         }
     }

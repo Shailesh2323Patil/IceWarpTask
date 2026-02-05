@@ -20,12 +20,9 @@ class LocalDataSource(context: Context) : DataSource.Local {
         context = context.applicationContext,
         name = "app.db"
     )
-
     private val database = AppDatabase(driver)
-
     private val userQueries = database.userQueries
     private val chanelQueries = database.channelQueries
-
     private val groupQueries = database.groupQueries
 
     override fun insertUser(

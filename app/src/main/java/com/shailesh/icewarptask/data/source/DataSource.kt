@@ -37,5 +37,5 @@ class DataSource {
         fun logout(): Flow<Unit>
     }
 
-    interface Cache : Remote
+    interface Cache
 }

@@ -15,8 +15,3 @@ class AppSchedulerProvider @Inject constructor() : SchedulerProvider {
     override fun io(): Scheduler = Schedulers.io()
     override fun ui(): Scheduler = AndroidSchedulers.mainThread()
 }
-
-sealed class UseCaseResult<out T> {
-    data class Success<T>(val data: T) : UseCaseResult<T>()
-    data class Error(val error: ErrorModel) : UseCaseResult<Nothing>()
-}

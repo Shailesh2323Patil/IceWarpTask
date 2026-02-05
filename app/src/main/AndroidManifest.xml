@@ -26,7 +26,7 @@
         <activity
             android:name=".ui.login.screen.LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.IceWarpTask" />
+            android:theme="@style/Theme.IceWarpTask.Login" />
         <activity
             android:name=".ui.channel.screen.ChannelActivity"
             android:exported="false"

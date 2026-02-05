@@ -2,6 +2,7 @@ package com.shailesh.icewarptask.ui.channel.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.shailesh.icewarptask.domain.usecase.model.UseCaseResult
 import com.shailesh.icewarptask.ui.channel.model.Group
 import com.shailesh.icewarptask.ui.channel.model.GroupUiState
 import com.shailesh.icewarptask.ui.channel.model.ScreenUiState
@@ -10,12 +11,11 @@ import com.shailesh.icewarptask.ui.channel.usecase.GetChannelFromGroupUseCase
 import com.shailesh.icewarptask.ui.channel.usecase.GetGroupUseCase
 import com.shailesh.icewarptask.ui.channel.usecase.GetUsersUseCase
 import com.shailesh.icewarptask.ui.channel.usecase.LogoutUseCase
-import com.shailesh.icewarptask.util.rxjava.UseCaseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,10 +31,26 @@ class ChannelViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ScreenUiState())
     val uiState = _uiState.asStateFlow()
+
     private val _eventsLogout = MutableSharedFlow<Boolean>()
     val eventsLogout: Flow<Boolean> = _eventsLogout
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: Flow<Boolean> = _isLoading
+
+    private val _errorEvent = MutableSharedFlow<String>()
+    val errorEvent = _errorEvent.asSharedFlow()
+
+    var isDataAlreadyLoaded = false
+        private set
+
     fun getUserDetails() {
+        if (isDataAlreadyLoaded) return
+
+        isDataAlreadyLoaded = true
+
+        _isLoading.value = true
+
         viewModelScope.launch {
             getUsersUseCase().collect { userList ->
                 userList.forEach { user ->
@@ -62,16 +78,20 @@ class ChannelViewModel @Inject constructor(
             when (val result = channelUseCase.execute()) {
                 is UseCaseResult.Success -> {
                     val groupData = result.data
-
                     groupData.collect { groupList ->
                         groupList.forEach { group ->
                             updatedGroupList.add(GroupUiState(group.id, group.name))
                         }
                         _uiState.value = ScreenUiState(groupList = updatedGroupList)
+                        _isLoading.value = false
                     }
                 }
 
-                is UseCaseResult.Error -> {}
+                is UseCaseResult.Error -> {
+                    val error = result.error
+                    _isLoading.value = false
+                    _errorEvent.emit(error.errorInformation.toString())
+                }
             }
         }
     }
@@ -106,6 +126,11 @@ class ChannelViewModel @Inject constructor(
         }
     }
 
+    /**
+     * We will fetch the Data from DB On Demand,
+     * Once the Group Folder Name is expanded, We will fetch latest Data from DB
+     * After fetching from DB it will store in List against the Group Folder Name
+     * */
     fun getChannelFromGroupNameDetails(group: Group) {
         updateGroup(group.id) { it.copy(isLoading = true) }
 
@@ -115,7 +140,9 @@ class ChannelViewModel @Inject constructor(
             getChannelFromGroupUseCase().collect { channelList ->
                 updateGroup(
                     group.id
-                ) { it.copy(channelList = channelList, isLoading = false) }
+                ) {
+                    it.copy(channelList = channelList, isLoading = false)
+                }
             }
         }
     }

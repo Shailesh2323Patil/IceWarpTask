@@ -1,6 +1,5 @@
 package com.shailesh.icewarptask.data.repository
 
-import com.shailesh.icewarptask.data.remote.dto.ChannelResponseDTO
 import com.shailesh.icewarptask.data.source.DataSource
 import com.shailesh.icewarptask.domain.repository.ChannelRepository
 import com.shailesh.icewarptask.ui.channel.model.Channel
@@ -20,6 +19,9 @@ class ChannelRepositoryImpl(
         excludeMembers: Boolean,
         includePermissions: Boolean
     ): Flow<List<Group>> {
+        localDataSource.deleteChannels()
+        localDataSource.deleteGroups()
+
         val response = remoteDataSource.getChannels(
             token = token,
             includeUnreadCount = includeUnreadCount,

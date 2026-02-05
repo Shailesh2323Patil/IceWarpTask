@@ -1,6 +1,5 @@
 package com.shailesh.icewarptask.domain.repository
 
-import com.shailesh.icewarptask.data.remote.dto.ChannelResponseDTO
 import com.shailesh.icewarptask.ui.channel.model.Channel
 import com.shailesh.icewarptask.ui.channel.model.Group
 import com.shailesh.icewarptask.ui.login.model.User

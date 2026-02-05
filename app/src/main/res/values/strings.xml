@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">IceWarpTask</string>
+    <string name="channels_screen_title">Channels</string>
+    <string name="back_button_description">Back</string>
+    <string name="change_theme_button_description">Change Theme</string>
+    <string name="logout_button_description">Logout</string>
+    <string name="collapse_group_description">Collapse</string>
+    <string name="expand_group_description">Expand</string>
+    <string name="no_channels_available">No channels available</string>
+    <string name="email_is_required">Email is required</string>
+    <string name="enter_a_valid_email_address">Enter a valid email address</string>
+    <string name="password_is_required">Password is required</string>
+    <string name="password_length_error">Password must be at least 6 characters</string>
+    <string name="exit">Exit</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="exit_message">Are you sure you want to Exit ?</string>
+    <string name="logout">Logout</string>
+    <string name="logout_message">Are you sure you want to logout ?</string>
+    <string name="cancel">Cancel</string>
 </resources>

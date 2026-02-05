@@ -1,6 +1,5 @@
 package com.shailesh.icewarptask.ui.channel.usecase
 
-import com.shailesh.icewarptask.data.remote.dto.ChannelResponseDTO
 import com.shailesh.icewarptask.domain.repository.ChannelRepository
 import com.shailesh.icewarptask.domain.usecase.base.BaseCoroutineUseCase
 import com.shailesh.icewarptask.domain.usecase.mapper.CloudErrorMapper

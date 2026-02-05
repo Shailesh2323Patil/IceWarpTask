@@ -1,11 +1,9 @@
 package com.shailesh.icewarptask.domain.usecase.base
 
 import com.shailesh.icewarptask.domain.usecase.mapper.CloudErrorMapper
-import com.shailesh.icewarptask.util.rxjava.UseCaseResult
-import com.shailesh.icewarptask.util.rxjava.DispatcherProvider
+import com.shailesh.icewarptask.domain.usecase.model.UseCaseResult
 import com.shailesh.icewarptask.util.rxjava.SchedulerProvider
 import io.reactivex.Single
-import kotlinx.coroutines.withContext
 
 abstract class BaseSingleUseCase<T>(
     private val schedulerProvider: SchedulerProvider,

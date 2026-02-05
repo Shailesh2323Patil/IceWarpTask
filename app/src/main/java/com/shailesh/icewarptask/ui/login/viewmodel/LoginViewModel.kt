@@ -2,9 +2,9 @@ package com.shailesh.icewarptask.ui.login.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.shailesh.icewarptask.domain.usecase.model.UseCaseResult
 import com.shailesh.icewarptask.ui.login.model.User
 import com.shailesh.icewarptask.ui.login.usecase.LoginUseCase
-import com.shailesh.icewarptask.util.rxjava.UseCaseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -18,10 +18,10 @@ class LoginViewModel @Inject constructor(
     private val _livaData = MutableLiveData<User>()
     val liveData = _livaData
 
-    fun login(email: String, password: String) {
-        //loginUseCase.username = "testuser@mofa.onice.io"
-        //loginUseCase.password = "Password123456"
+    private val _errorData = MutableLiveData<String>()
+    val errorData = _errorData
 
+    fun login(email: String, password: String) {
         loginUseCase.username = email
         loginUseCase.password = password
 
@@ -34,6 +34,7 @@ class LoginViewModel @Inject constructor(
                     }
 
                     is UseCaseResult.Error -> {
+                        _errorData.value = result.error.errorInformation.toString()
                     }
                 }
             }

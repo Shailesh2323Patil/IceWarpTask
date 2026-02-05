@@ -8,5 +8,7 @@ class AppConstants {
 
         const val LOGIN = "Login"
         const val DASHBOARD = "Dashboard"
+
+        const val PASSWORD_LENGTH = 6
     }
 }

@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val getUsersUseCase: GetUsersUseCase) :
-    ViewModel() {
+class SplashViewModel @Inject constructor(private val getUsersUseCase: GetUsersUseCase) : ViewModel() {
     private val _navigate = MutableLiveData<String>()
     val navigate: LiveData<String> = _navigate
 

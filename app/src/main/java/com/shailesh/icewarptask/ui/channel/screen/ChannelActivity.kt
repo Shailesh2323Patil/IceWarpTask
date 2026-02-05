@@ -2,6 +2,7 @@ package com.shailesh.icewarptask.ui.channel.screen
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -25,7 +27,6 @@ import com.shailesh.icewarptask.ui.theme.IceWrapTaskTheme
 
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlin.getValue
 
 @AndroidEntryPoint
 class ChannelActivity : ComponentActivity() {
@@ -35,17 +36,23 @@ class ChannelActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            IceWrapTaskTheme {
+            var isDarkTheme by remember { mutableStateOf(false) }
+            IceWrapTaskTheme(darkTheme = isDarkTheme) {
+                val context = LocalContext.current
+                LaunchedEffect(Unit) {
+                    viewModel.errorEvent.collect { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    }
+                }
+
                 LaunchedEffect(
                     Unit
-                ) { channelList() }
+                ) {
+                    channelList()
+                }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    var showLogoutDialog by remember {
-                        mutableStateOf(
-                            false
-                        )
-                    }
+                    var showLogoutDialog by remember { mutableStateOf(false) }
 
                     var showExitDialog by remember { mutableStateOf(false) }
 
@@ -57,7 +64,9 @@ class ChannelActivity : ComponentActivity() {
                             viewModel = viewModel,
                             onBackClick = { showExitDialog = true },
                             onLogoutClick = { showLogoutDialog = true },
-                            onThemeChangeClick = {})
+                            onThemeChangeClick = { isDarkTheme = !isDarkTheme },
+                            isDarkTheme = isDarkTheme
+                        )
 
                         if (showLogoutDialog) {
                             LogoutDialog(
@@ -86,7 +95,13 @@ class ChannelActivity : ComponentActivity() {
     }
 
     private fun setObservers() {
-        lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { viewModel.eventsLogout.collect { event -> nextActivity() } } }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.eventsLogout.collect {
+                    event -> nextActivity()
+                }
+            }
+        }
     }
 
     private fun channelList() {
