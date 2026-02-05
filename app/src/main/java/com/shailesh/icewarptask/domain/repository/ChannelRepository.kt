@@ -12,9 +12,10 @@ interface ChannelRepository {
         includeUnreadCount: Boolean = true,
         excludeMembers: Boolean = true,
         includePermissions: Boolean = false
-    ): ChannelResponseDTO
+    ): Flow<List<Group>>
 
     fun getUsers(): Flow<List<User>>
     fun getGroup(): Flow<List<Group>>
     fun getChannelsByGroupFolderName (groupFolderName: String): Flow<List<Channel>>
+    fun logout(): Flow<Unit>
 }

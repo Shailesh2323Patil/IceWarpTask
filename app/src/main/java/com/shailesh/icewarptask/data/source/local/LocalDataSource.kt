@@ -12,6 +12,7 @@ import com.shailesh.icewraptask.GroupEntity
 import com.shailesh.icewraptask.UserEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class LocalDataSource(context: Context) : DataSource.Local {
     private val driver = AndroidSqliteDriver(
@@ -78,5 +79,21 @@ class LocalDataSource(context: Context) : DataSource.Local {
         return chanelQueries.getChannelByGroupName(
             groupFolderName
         ).asFlow().mapToList(Dispatchers.IO)
+    }
+
+    override fun deleteChannels() {
+        chanelQueries.deleteChannels()
+    }
+
+    override fun deleteGroups() {
+        groupQueries.deleteGroups()
+    }
+
+    override fun logout(): Flow<Unit> {
+        userQueries.deleteUser()
+        groupQueries.deleteGroups()
+        chanelQueries.deleteChannels()
+
+        return flow { emit(Unit) }
     }
 }

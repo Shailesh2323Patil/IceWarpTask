@@ -13,4 +13,4 @@ getUsers:
 SELECT * FROM UserEntity;
 
 deleteUser:
-DELETE FROM UserEntity WHERE id = ?;
+DELETE FROM UserEntity;

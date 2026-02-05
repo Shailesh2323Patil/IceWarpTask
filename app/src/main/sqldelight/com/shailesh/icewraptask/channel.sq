@@ -32,3 +32,6 @@ getChannelByGroupName:
 SELECT *
 FROM ChannelEntity
 WHERE groupFolderName = ?;
+
+deleteChannels:
+DELETE FROM ChannelEntity;

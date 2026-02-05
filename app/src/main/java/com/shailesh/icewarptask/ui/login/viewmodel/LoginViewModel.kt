@@ -1,6 +1,8 @@
 package com.shailesh.icewarptask.ui.login.viewmodel
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.shailesh.icewarptask.ui.login.model.User
 import com.shailesh.icewarptask.ui.login.usecase.LoginUseCase
 import com.shailesh.icewarptask.util.rxjava.UseCaseResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,15 +15,22 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    fun login() {
-        loginUseCase.username = "testuser@mofa.onice.io"
-        loginUseCase.password = "Password123456"
+    private val _livaData = MutableLiveData<User>()
+    val liveData = _livaData
+
+    fun login(email: String, password: String) {
+        //loginUseCase.username = "testuser@mofa.onice.io"
+        //loginUseCase.password = "Password123456"
+
+        loginUseCase.username = email
+        loginUseCase.password = password
 
         val disposable = loginUseCase.execute()
             .subscribe { result ->
                 when (result) {
                     is UseCaseResult.Success -> {
                         val user = result.data
+                        _livaData.value = user
                     }
 
                     is UseCaseResult.Error -> {

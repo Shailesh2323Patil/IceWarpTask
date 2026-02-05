@@ -19,7 +19,7 @@ class ChannelRepositoryImpl(
         includeUnreadCount: Boolean,
         excludeMembers: Boolean,
         includePermissions: Boolean
-    ): ChannelResponseDTO {
+    ): Flow<List<Group>> {
         val response = remoteDataSource.getChannels(
             token = token,
             includeUnreadCount = includeUnreadCount,
@@ -40,7 +40,14 @@ class ChannelRepositoryImpl(
             localDataSource.insertGroup(groupName)
         }
 
-        return response
+        return localDataSource.getGroup().map { entities ->
+            entities.map { entity ->
+                Group(
+                    id = entity.id,
+                    name = entity.name
+                )
+            }
+        }
     }
 
     override fun getUsers(): Flow<List<User>> {
@@ -80,5 +87,9 @@ class ChannelRepositoryImpl(
                 )
             }
         }
+    }
+
+    override fun logout(): Flow<Unit> {
+        return localDataSource.logout()
     }
 }

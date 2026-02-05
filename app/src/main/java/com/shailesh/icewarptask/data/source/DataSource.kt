@@ -29,6 +29,12 @@ class DataSource {
         fun getChannelsByGroupFolderName(
             groupFolderName: String
         ): Flow<List<ChannelEntity>>
+
+        fun deleteChannels(): Unit
+
+        fun deleteGroups(): Unit
+
+        fun logout(): Flow<Unit>
     }
 
     interface Cache : Remote
